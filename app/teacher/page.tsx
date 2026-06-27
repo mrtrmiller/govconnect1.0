@@ -8,50 +8,96 @@ export default function TeacherPage() {
     <>
       <Navbar />
 
-      <main className="pageShell">
-        <section className="panel">
+      <main className="teacherPage">
+        <section className="teacherHero">
           <p className="eyebrow">Teacher Studio</p>
-          <h1>Build This Week’s News Lesson</h1>
+
+          <h1>Build This Week’s Lesson</h1>
+
           <p className="subtitle">
-            Preview and eventually edit the lesson students will see.
+            Create a current-event lesson students can complete in minutes.
           </p>
         </section>
 
-        <section className="formPreview">
-          <label>
-            Headline
-            <input defaultValue={lesson.title} />
-          </label>
+        <section className="builderLayout">
+          <div className="builderPanel">
+            <h2>Lesson Basics</h2>
 
-          <label>
-            Category
-            <input defaultValue={lesson.category} />
-          </label>
+            <label>
+              Headline
+              <input defaultValue={lesson.title} />
+            </label>
 
-          <label>
-            Student Summary
-            <textarea defaultValue={lesson.summary.join("\n\n")} />
-          </label>
+            <label>
+              Category
+              <input defaultValue={lesson.category} />
+            </label>
 
-          <label>
-            Vocabulary
+            <label>
+              Date
+              <input defaultValue={lesson.date} />
+            </label>
+
+            <label>
+              Reading Time
+              <input type="number" defaultValue={lesson.readTime} />
+            </label>
+
+            <label>
+              Learning Target
+              <textarea defaultValue={lesson.learningTarget} />
+            </label>
+          </div>
+
+          <div className="builderPanel">
+            <h2>Student Summary</h2>
+
             <textarea
-              defaultValue={lesson.vocabulary
-                .map((item) => `${item.term}: ${item.definition}`)
-                .join("\n")}
+              className="largeTextarea"
+              defaultValue={lesson.summary.join("\n\n")}
             />
-          </label>
+          </div>
 
-          <label>
-            Questions
-            <textarea defaultValue={lesson.questions.join("\n")} />
-          </label>
+          <div className="builderPanel">
+            <h2>Vocabulary</h2>
 
-          <button className="primaryButton">Save Lesson</button>
+            {lesson.vocabulary.map((item) => (
+              <div className="builderItem" key={item.term}>
+                <input defaultValue={item.term} />
+                <textarea defaultValue={item.definition} />
+              </div>
+            ))}
 
-          <Link className="secondaryButton" href="/student">
-            Preview Student View
-          </Link>
+            <button className="secondaryButton">+ Add Vocabulary</button>
+          </div>
+
+          <div className="builderPanel">
+            <h2>Questions</h2>
+
+            {lesson.questions.map((question, index) => (
+              <div className="builderItem" key={question.prompt}>
+                <label>
+                  Question {index + 1}
+                  <textarea defaultValue={question.prompt} />
+                </label>
+
+                <label>
+                  Teacher Feedback
+                  <textarea defaultValue={question.feedback} />
+                </label>
+              </div>
+            ))}
+
+            <button className="secondaryButton">+ Add Question</button>
+          </div>
+
+          <div className="builderActions">
+            <button className="primaryButton">Save Lesson</button>
+
+            <Link className="secondaryButton" href="/student">
+              Preview Student View
+            </Link>
+          </div>
         </section>
       </main>
 

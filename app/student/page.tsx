@@ -3,6 +3,11 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { lesson } from "@/data/lesson";
 import ArticleCard from "@/components/lesson/ArticleCard";
+import VocabularyCard from "@/components/lesson/VocabularyCard";
+import QuestionCard from "@/components/lesson/QuestionCard";
+import ProgressCard from "@/components/lesson/ProgressCard";
+import LessonStats from "@/components/lesson/LessonStats";
+import LearningTarget from "@/components/lesson/LearningTarget";
 
 export default function StudentPage() {
   return (
@@ -10,6 +15,16 @@ export default function StudentPage() {
       <Navbar />
 
       <main className="studentPage">
+        <ProgressCard />
+
+        <LessonStats
+          readTime={lesson.readTime}
+          vocabularyCount={lesson.vocabulary.length}
+          questionCount={lesson.questions.length}
+        />
+
+        <LearningTarget target={lesson.learningTarget} />
+
         <section className="studentHero">
           <p className="eyebrow">Student View</p>
 
@@ -22,42 +37,25 @@ export default function StudentPage() {
 
         <section className="lessonLayout">
           <ArticleCard
-  category={lesson.category}
-  title={lesson.title}
-  summary={lesson.summary}
-/>
+            category={lesson.category}
+            date={lesson.date}
+            title={lesson.title}
+            summary={lesson.summary}
+          />
 
-          <aside className="vocabPanel">
-            <h2>Vocabulary</h2>
-
-            <p className="smallText">
-              Match each vocabulary term to its definition.
-            </p>
-
-            {lesson.vocabulary.map((item) => (
-              <div className="vocabItem" key={item.term}>
-                <strong>{item.term}</strong>
-
-                <span>{item.definition}</span>
-              </div>
-            ))}
-          </aside>
+          <VocabularyCard vocabulary={lesson.vocabulary} />
         </section>
 
         <section className="questionPanel">
           <h2>Respond</h2>
 
           {lesson.questions.map((question, index) => (
-            <label key={question}>
-              {index + 1}. {question}
-
-              <textarea placeholder="Type your response here..." />
-            </label>
+            <QuestionCard
+              key={question.prompt}
+              question={question}
+              number={index + 1}
+            />
           ))}
-
-          <button className="primaryButton">
-            Check My Work
-          </button>
         </section>
 
         <div className="pageActions">
