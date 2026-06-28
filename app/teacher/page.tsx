@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import { useEffect, useState } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { lesson } from "@/data/lesson";
+import { Lesson } from "@/types/lesson";
 import WorkflowBanner from "@/components/teacher/WorkflowBanner";
 import LessonBasics from "@/components/teacher/LessonBasics";
 import SummaryEditor from "@/components/teacher/SummaryEditor";
@@ -13,16 +13,42 @@ import QuestionEditor from "@/components/teacher/QuestionEditor";
 import StudentPreview from "@/components/teacher/StudentPreview";
 import SaveBar from "@/components/teacher/SaveBar";
 
+const LESSON_DRAFT_STORAGE_KEY = "govconnect.lessonDraft";
+
 export default function TeacherPage() {
-  const [lessonDraft, setLessonDraft] = useState({
+  const [lessonDraft, setLessonDraft] = useState<Lesson>({
     ...lesson,
   });
+
   const [hasChanges, setHasChanges] = useState(false);
 
-const updateLessonDraft = (updatedLesson: typeof lessonDraft) => {
-  setLessonDraft(updatedLesson);
-  setHasChanges(true);
-};
+  useEffect(() => {
+    const savedDraft = window.localStorage.getItem(LESSON_DRAFT_STORAGE_KEY);
+
+    if (!savedDraft) {
+      return;
+    }
+
+    try {
+      setLessonDraft(JSON.parse(savedDraft));
+    } catch {
+      window.localStorage.removeItem(LESSON_DRAFT_STORAGE_KEY);
+    }
+  }, []);
+
+  const updateLessonDraft = (updatedLesson: Lesson) => {
+    setLessonDraft(updatedLesson);
+    setHasChanges(true);
+  };
+
+  const saveDraft = () => {
+    window.localStorage.setItem(
+      LESSON_DRAFT_STORAGE_KEY,
+      JSON.stringify(lessonDraft)
+    );
+
+    setHasChanges(false);
+  };
 
   return (
     <>
@@ -62,15 +88,12 @@ const updateLessonDraft = (updatedLesson: typeof lessonDraft) => {
           />
 
           <QuestionEditor
-  lessonDraft={lessonDraft}
-  setLessonDraft={updateLessonDraft}
-/>
-</section>
+            lessonDraft={lessonDraft}
+            setLessonDraft={updateLessonDraft}
+          />
+        </section>
 
-<SaveBar
-  hasChanges={hasChanges}
-  onSave={() => setHasChanges(false)}
-/>
+        <SaveBar hasChanges={hasChanges} onSave={saveDraft} />
       </main>
 
       <Footer />
