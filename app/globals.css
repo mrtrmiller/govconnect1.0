@@ -547,3 +547,195 @@ button:disabled {
   gap: 14px;
   flex-wrap: wrap;
 }
+.previewBanner {
+  max-width: 1000px;
+  margin: 0 auto 24px;
+  padding: 24px;
+  background: white;
+  border: 1px solid rgba(21, 71, 52, 0.12);
+  border-radius: 24px;
+  box-shadow: 0 16px 40px rgba(21, 71, 52, 0.08);
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  align-items: center;
+}
+
+.previewBanner h2 {
+  margin: 0;
+  color: var(--green);
+}
+
+.previewBanner p {
+  margin-bottom: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.workflowSteps {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.workflowStep {
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: rgba(21, 71, 52, 0.08);
+  color: var(--green);
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.activeStep {
+  background: var(--orange);
+  color: white;
+}
+
+@media (max-width: 800px) {
+  .previewBanner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.livePreviewLayout {
+  max-width: 1000px;
+  margin: 0 auto 22px;
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 22px;
+}
+
+.livePreviewLayout .builderLayout {
+  margin: 0;
+}
+
+.studentPreviewPanel {
+  background: white;
+  border: 1px solid rgba(21, 71, 52, 0.12);
+  border-radius: 24px;
+  padding: 28px;
+  box-shadow: 0 16px 40px rgba(21, 71, 52, 0.08);
+  align-self: start;
+  position: sticky;
+  top: 96px;
+}
+
+.studentPreviewPanel h2 {
+  margin: 0 0 12px;
+  color: var(--green);
+}
+
+.previewMiniCard {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(21, 71, 52, 0.06);
+  display: grid;
+  gap: 6px;
+}
+
+.previewMiniCard strong {
+  color: var(--green);
+}
+
+.previewMiniCard span {
+  color: var(--muted);
+}
+
+@media (max-width: 900px) {
+  .livePreviewLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .studentPreviewPanel {
+    position: static;
+  }
+}.previewLearningTarget {
+  margin-top: 18px;
+  padding: 16px;
+  border-left: 5px solid var(--orange);
+  background: rgba(224, 71, 38, 0.08);
+  border-radius: 14px;
+}
+
+.previewLearningTarget strong {
+  color: var(--green);
+}
+
+.previewLearningTarget p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.previewMeta {
+  margin-top: 0;
+  color: var(--muted);
+  font-weight: 700;
+}
+.builderItemHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deleteButton {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: transform 0.15s;
+}
+
+.deleteButton:hover {
+  transform: scale(1.15);
+}
+.saveBar {
+  position: sticky;
+  bottom: 18px;
+  z-index: 20;
+  background: white;
+  border: 1px solid rgba(21, 71, 52, 0.12);
+  border-radius: 22px;
+  padding: 18px;
+  box-shadow: 0 18px 50px rgba(21, 71, 52, 0.18);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 18px;
+}
+
+.saveBar p {
+  margin: 6px 0 0;
+  color: var(--muted);
+}
+
+.saveBarActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 800px) {
+  .saveBar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+.previewQuestionPanel {
+  display: grid;
+  gap: 14px;
+}
+
+.previewQuestionPanel h2 {
+  margin: 0;
+  color: var(--green);
+}
+
+.studentPreviewPanel .questionCard {
+  box-shadow: none;
+}
+
+.studentPreviewPanel .questionInput {
+  min-height: 90px;
+}

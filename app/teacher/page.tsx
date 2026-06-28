@@ -1,9 +1,29 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { lesson } from "@/data/lesson";
+import WorkflowBanner from "@/components/teacher/WorkflowBanner";
+import LessonBasics from "@/components/teacher/LessonBasics";
+import SummaryEditor from "@/components/teacher/SummaryEditor";
+import VocabularyEditor from "@/components/teacher/VocabularyEditor";
+import QuestionEditor from "@/components/teacher/QuestionEditor";
+import StudentPreview from "@/components/teacher/StudentPreview";
+import SaveBar from "@/components/teacher/SaveBar";
 
 export default function TeacherPage() {
+  const [lessonDraft, setLessonDraft] = useState({
+    ...lesson,
+  });
+  const [hasChanges, setHasChanges] = useState(false);
+
+const updateLessonDraft = (updatedLesson: typeof lessonDraft) => {
+  setLessonDraft(updatedLesson);
+  setHasChanges(true);
+};
+
   return (
     <>
       <Navbar />
@@ -11,94 +31,46 @@ export default function TeacherPage() {
       <main className="teacherPage">
         <section className="teacherHero">
           <p className="eyebrow">Teacher Studio</p>
-
           <h1>Build This Week’s Lesson</h1>
-
           <p className="subtitle">
             Create a current-event lesson students can complete in minutes.
           </p>
         </section>
 
-        <section className="builderLayout">
-          <div className="builderPanel">
-            <h2>Lesson Basics</h2>
+        <WorkflowBanner />
 
-            <label>
-              Headline
-              <input defaultValue={lesson.title} />
-            </label>
-
-            <label>
-              Category
-              <input defaultValue={lesson.category} />
-            </label>
-
-            <label>
-              Date
-              <input defaultValue={lesson.date} />
-            </label>
-
-            <label>
-              Reading Time
-              <input type="number" defaultValue={lesson.readTime} />
-            </label>
-
-            <label>
-              Learning Target
-              <textarea defaultValue={lesson.learningTarget} />
-            </label>
-          </div>
-
-          <div className="builderPanel">
-            <h2>Student Summary</h2>
-
-            <textarea
-              className="largeTextarea"
-              defaultValue={lesson.summary.join("\n\n")}
+        <section className="livePreviewLayout">
+          <div className="builderLayout">
+            <LessonBasics
+              lessonDraft={lessonDraft}
+              setLessonDraft={updateLessonDraft}
             />
           </div>
 
-          <div className="builderPanel">
-            <h2>Vocabulary</h2>
-
-            {lesson.vocabulary.map((item) => (
-              <div className="builderItem" key={item.term}>
-                <input defaultValue={item.term} />
-                <textarea defaultValue={item.definition} />
-              </div>
-            ))}
-
-            <button className="secondaryButton">+ Add Vocabulary</button>
-          </div>
-
-          <div className="builderPanel">
-            <h2>Questions</h2>
-
-            {lesson.questions.map((question, index) => (
-              <div className="builderItem" key={question.prompt}>
-                <label>
-                  Question {index + 1}
-                  <textarea defaultValue={question.prompt} />
-                </label>
-
-                <label>
-                  Teacher Feedback
-                  <textarea defaultValue={question.feedback} />
-                </label>
-              </div>
-            ))}
-
-            <button className="secondaryButton">+ Add Question</button>
-          </div>
-
-          <div className="builderActions">
-            <button className="primaryButton">Save Lesson</button>
-
-            <Link className="secondaryButton" href="/student">
-              Preview Student View
-            </Link>
-          </div>
+          <StudentPreview lessonDraft={lessonDraft} />
         </section>
+
+        <section className="builderLayout">
+          <SummaryEditor
+            lessonDraft={lessonDraft}
+            setLessonDraft={updateLessonDraft}
+          />
+
+          <VocabularyEditor
+            lessonDraft={lessonDraft}
+            setLessonDraft={updateLessonDraft}
+          />
+
+          <QuestionEditor
+  lessonDraft={lessonDraft}
+  setLessonDraft={updateLessonDraft}
+/>
+</section>
+
+<SaveBar
+  hasChanges={hasChanges}
+  onSave={() => setHasChanges(false)}
+/>
       </main>
 
       <Footer />
