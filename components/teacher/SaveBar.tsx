@@ -2,15 +2,34 @@ import Link from "next/link";
 
 type SaveBarProps = {
   hasChanges: boolean;
+  isPublished: boolean;
   onSave: () => void;
+  onPublish: () => void;
 };
 
-export default function SaveBar({ hasChanges, onSave }: SaveBarProps) {
+export default function SaveBar({
+  hasChanges,
+  isPublished,
+  onSave,
+  onPublish,
+}: SaveBarProps) {
+  const statusText = hasChanges
+    ? "🟡 Unsaved Changes"
+    : isPublished
+      ? "🚀 Published"
+      : "🟢 Draft Saved";
+
+  const helperText = hasChanges
+    ? "Save your draft or publish the latest version."
+    : isPublished
+      ? "This lesson is published locally."
+      : "Your draft is saved locally.";
+
   return (
     <div className="saveBar">
       <div>
-        <strong>{hasChanges ? "🟡 Unsaved Changes" : "🟢 Draft Saved"}</strong>
-        <p>{hasChanges ? "Save your draft before publishing." : "Your draft is up to date."}</p>
+        <strong>{statusText}</strong>
+        <p>{helperText}</p>
       </div>
 
       <div className="saveBarActions">
@@ -22,7 +41,9 @@ export default function SaveBar({ hasChanges, onSave }: SaveBarProps) {
           Preview
         </Link>
 
-        <button className="secondaryButton">Publish</button>
+        <button className="secondaryButton" onClick={onPublish}>
+          Publish
+        </button>
       </div>
     </div>
   );

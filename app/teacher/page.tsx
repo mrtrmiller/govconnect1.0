@@ -14,6 +14,7 @@ import StudentPreview from "@/components/teacher/StudentPreview";
 import SaveBar from "@/components/teacher/SaveBar";
 
 const LESSON_DRAFT_STORAGE_KEY = "govconnect.lessonDraft";
+const PUBLISHED_LESSON_STORAGE_KEY = "govconnect.publishedLesson";
 
 export default function TeacherPage() {
   const [lessonDraft, setLessonDraft] = useState<Lesson>({
@@ -21,24 +22,32 @@ export default function TeacherPage() {
   });
 
   const [hasChanges, setHasChanges] = useState(false);
+  const [isPublished, setIsPublished] = useState(false);
 
   useEffect(() => {
     const savedDraft = window.localStorage.getItem(LESSON_DRAFT_STORAGE_KEY);
 
-    if (!savedDraft) {
-      return;
+    if (savedDraft) {
+      try {
+        setLessonDraft(JSON.parse(savedDraft));
+      } catch {
+        window.localStorage.removeItem(LESSON_DRAFT_STORAGE_KEY);
+      }
     }
 
-    try {
-      setLessonDraft(JSON.parse(savedDraft));
-    } catch {
-      window.localStorage.removeItem(LESSON_DRAFT_STORAGE_KEY);
+    const publishedLesson = window.localStorage.getItem(
+      PUBLISHED_LESSON_STORAGE_KEY
+    );
+
+    if (publishedLesson) {
+      setIsPublished(true);
     }
   }, []);
 
   const updateLessonDraft = (updatedLesson: Lesson) => {
     setLessonDraft(updatedLesson);
     setHasChanges(true);
+    setIsPublished(false);
   };
 
   const saveDraft = () => {
@@ -48,6 +57,21 @@ export default function TeacherPage() {
     );
 
     setHasChanges(false);
+  };
+
+  const publishLesson = () => {
+    window.localStorage.setItem(
+      LESSON_DRAFT_STORAGE_KEY,
+      JSON.stringify(lessonDraft)
+    );
+
+    window.localStorage.setItem(
+      PUBLISHED_LESSON_STORAGE_KEY,
+      JSON.stringify(lessonDraft)
+    );
+
+    setHasChanges(false);
+    setIsPublished(true);
   };
 
   return (
@@ -93,7 +117,12 @@ export default function TeacherPage() {
           />
         </section>
 
-        <SaveBar hasChanges={hasChanges} onSave={saveDraft} />
+        <SaveBar
+          hasChanges={hasChanges}
+          isPublished={isPublished}
+          onSave={saveDraft}
+          onPublish={publishLesson}
+        />
       </main>
 
       <Footer />

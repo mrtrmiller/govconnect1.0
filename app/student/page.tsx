@@ -1,7 +1,11 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { lesson } from "@/data/lesson";
+import { Lesson } from "@/types/lesson";
 import ArticleCard from "@/components/lesson/ArticleCard";
 import VocabularyCard from "@/components/lesson/VocabularyCard";
 import QuestionCard from "@/components/lesson/QuestionCard";
@@ -9,7 +13,29 @@ import ProgressCard from "@/components/lesson/ProgressCard";
 import LessonStats from "@/components/lesson/LessonStats";
 import LearningTarget from "@/components/lesson/LearningTarget";
 
+const PUBLISHED_LESSON_STORAGE_KEY = "govconnect.publishedLesson";
+
 export default function StudentPage() {
+  const [studentLesson, setStudentLesson] = useState<Lesson>({
+    ...lesson,
+  });
+
+  useEffect(() => {
+    const publishedLesson = window.localStorage.getItem(
+      PUBLISHED_LESSON_STORAGE_KEY
+    );
+
+    if (!publishedLesson) {
+      return;
+    }
+
+    try {
+      setStudentLesson(JSON.parse(publishedLesson));
+    } catch {
+      window.localStorage.removeItem(PUBLISHED_LESSON_STORAGE_KEY);
+    }
+  }, []);
+
   return (
     <>
       <Navbar />
@@ -18,12 +44,12 @@ export default function StudentPage() {
         <ProgressCard />
 
         <LessonStats
-          readTime={lesson.readTime}
-          vocabularyCount={lesson.vocabulary.length}
-          questionCount={lesson.questions.length}
+          readTime={studentLesson.readTime}
+          vocabularyCount={studentLesson.vocabulary.length}
+          questionCount={studentLesson.questions.length}
         />
 
-        <LearningTarget target={lesson.learningTarget} />
+        <LearningTarget target={studentLesson.learningTarget} />
 
         <section className="studentHero">
           <p className="eyebrow">Student View</p>
@@ -37,21 +63,21 @@ export default function StudentPage() {
 
         <section className="lessonLayout">
           <ArticleCard
-            category={lesson.category}
-            date={lesson.date}
-            title={lesson.title}
-            summary={lesson.summary}
+            category={studentLesson.category}
+            date={studentLesson.date}
+            title={studentLesson.title}
+            summary={studentLesson.summary}
           />
 
-          <VocabularyCard vocabulary={lesson.vocabulary} />
+          <VocabularyCard vocabulary={studentLesson.vocabulary} />
         </section>
 
         <section className="questionPanel">
           <h2>Respond</h2>
 
-          {lesson.questions.map((question, index) => (
+          {studentLesson.questions.map((question, index) => (
             <QuestionCard
-              key={question.prompt}
+              key={`${question.prompt}-${index}`}
               question={question}
               number={index + 1}
             />
